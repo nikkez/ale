@@ -154,6 +154,17 @@ function! ale_linters#elm#make#GetCommand(buffer) abort
         let l:dir_set_cmd = 'cd ' . ale#Escape(l:root_dir) . ' && '
     endif
 
+    let l:elm_file_absolute_path = fnamemodify(bufname(a:buffer), ':p')
+    let l:elm_file_path_inside_project = substitute(l:elm_file_absolute_path, l:root_dir, '', '')
+    let l:tests_match_index = match(l:elm_file_path_inside_project, '/tests')
+
+    " If we have a test file we run elm-test make
+    if l:tests_match_index == 0
+        let l:elm_test_make_command = l:dir_set_cmd . 'elm-test make --report=json %t'
+
+        return l:elm_test_make_command
+    endif
+
     " The elm compiler, at the time of this writing, uses '/dev/null' as
     " a sort of flag to tell the compiler not to generate an output file,
     " which is why this is hard coded here.
