@@ -149,6 +149,7 @@ function! ale_linters#elm#make#GetCommand(buffer) abort
 
     if empty(l:elm_json)
         let l:dir_set_cmd = ''
+        let l:root_dir = ''
     else
         let l:root_dir = fnamemodify(l:elm_json, ':p:h')
         let l:dir_set_cmd = 'cd ' . ale#Escape(l:root_dir) . ' && '
